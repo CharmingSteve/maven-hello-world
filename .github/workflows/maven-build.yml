@@ -65,6 +65,12 @@ jobs:
           # Use 'awk' to increment the patch version
           new_version=$(echo $current_version | awk -F. -v OFS=. '{$NF++; print}')
           
+          # Delete the old tag locally
+          git tag -d $current_version
+          
+          # Delete the old tag from the remote repository
+          git push origin :refs/tags/$current_version
+          
           # Create a new tag with the new version
           git tag $new_version
           
