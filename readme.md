@@ -145,4 +145,4 @@ The Maven’s jar plugin will create jar file and we need to define the main cla
                 └── app
                     └── AppTest.class
 ```
-
+ 
