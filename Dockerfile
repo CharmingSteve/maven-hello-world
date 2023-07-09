@@ -7,11 +7,6 @@ RUN mvn -B package -Drevision=$revision
 
 # Second stage: Java runner
 FROM adoptopenjdk:11-jre-hotspot
-ARG JAR_FILE=/app/target/myapp-*.jar
-COPY --from=builder $JAR_FILE /my-app.jar
-# Extract the version number from the JAR file name
-ARG VERSION=$(echo $JAR_FILE | sed -r 's/.*myapp-(.+)\.jar/\1/')
-# Set the VERSION environment variable
-ENV VERSION=$VERSION
+COPY --from=builder /app/target/myapp-*.jar /my-app.jar
 EXPOSE 8080
-CMD ["java", "-jar", "/my-app.jar"]
+CMD /bin/sh -c "VERSION=$(echo /my-app.jar | sed -r 's/.*myapp-(.+)\.jar/\1/') java -jar /my-app.jar"
