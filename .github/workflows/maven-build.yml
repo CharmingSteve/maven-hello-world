@@ -4,7 +4,7 @@ name: Maven Version Increment, Build, and Docker Push
 # Trigger event (when to run the workflow)
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 # Job definition (what to run in the workflow)
 jobs:
@@ -20,6 +20,8 @@ jobs:
       # Check out the repository
       - name: Check out Git repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # this fetches all history for all branches and tags
       
       # Install Java
       - name: Install Java
@@ -54,7 +56,7 @@ jobs:
           docker push charmingsteve/maven-hello-world:$new_version
           docker push charmingsteve/maven-hello-world:latest
 
-      # Increment version and build with Maven
+      # Increment version in Git
       - name: Increment version patch and Build with Maven
         run: |
           # Extract the current version from the latest tag
