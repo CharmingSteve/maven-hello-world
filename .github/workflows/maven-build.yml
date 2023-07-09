@@ -57,7 +57,7 @@ jobs:
           docker push charmingsteve/maven-hello-world:latest
 
       # Increment version in Git
-      - name: Increment version patch and Build with Maven
+      - name: Increment version patch
         run: |
           # Extract the current version from the latest tag
           current_version=$(git describe --tags --match "[0-9]*.[0-9]*.[0-9]*" --abbrev=0)
