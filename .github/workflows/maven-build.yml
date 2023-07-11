@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       
-      # Increment version and build with Maven
+      # Increment version
       - name: Increment version patch, Build with Maven, and Push Docker image
         run: |
           # Extract the current version from the latest tag
@@ -56,7 +56,7 @@ jobs:
           docker push charmingsteve/maven-hello-world:$new_version
           docker push charmingsteve/maven-hello-world:latest
 
-
+      # Increment version patch
       - name: Increment version patch
         id: increment_version
         run: |
@@ -81,10 +81,11 @@ jobs:
           # Set output variable
           echo "::set-output name=VERSION::$new_version"
 
-    - name: Update Helm chart
-      run: |
-        sed -i "s/tag: .*/tag: ${{ steps.increment_version.outputs.VERSION }}/g" helm/values.yaml
-        git config --global user.name 'github-actions'
-        git config --global user.email 'github-actions@github.com'
-        git commit -am "Update Helm chart with new version"
-        git push
+      # Update values
+      - name: Update Helm chart
+        run: |
+          sed -i "s/tag: .*/tag: ${{ steps.increment_version.outputs.VERSION }}/g" helm/values.yaml
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git commit -am "Update Helm chart with new version"
+          git push
