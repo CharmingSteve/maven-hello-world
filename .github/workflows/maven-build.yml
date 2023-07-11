@@ -56,31 +56,35 @@ jobs:
           docker push charmingsteve/maven-hello-world:$new_version
           docker push charmingsteve/maven-hello-world:latest
 
-      # Increment version in Git
+
       - name: Increment version patch
+        id: increment_version
         run: |
           # Extract the current version from the latest tag
           current_version=$(git describe --tags --match "[0-9]*.[0-9]*.[0-9]*" --abbrev=0)
-          
+            
           # Use 'awk' to increment the patch version
           new_version=$(echo $current_version | awk -F. -v OFS=. '{$NF++; print}')
-          
+            
           # Delete the old tag locally
           git tag -d $current_version
-          
+            
           # Delete the old tag from the remote repository
           git push origin :refs/tags/$current_version
-          
+            
           # Create a new tag with the new version
           git tag $new_version
-          
+            
           # Push the new tag to the remote repository
           git push --tags
-      # Update helm chart with correct version
-      - name: Update Helm chart
-        run: |
-          sed -i "s/tag: .*/tag: ${{ steps.get_version.outputs.VERSION }}/g" helm/values.yaml
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          git commit -am "Update Helm chart with new version"
-          git push
+            
+          # Set output variable
+          echo "::set-output name=VERSION::$new_version"
+
+    - name: Update Helm chart
+      run: |
+        sed -i "s/tag: .*/tag: ${{ steps.increment_version.outputs.VERSION }}/g" helm/values.yaml
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git commit -am "Update Helm chart with new version"
+        git push
