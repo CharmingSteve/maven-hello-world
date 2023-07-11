@@ -76,3 +76,7 @@ jobs:
           
           # Push the new tag to the remote repository
           git push --tags
+      # Update helm chart with correct version
+      - name: Update Helm chart
+        run: |
+          sed -i "s/tag: .*/tag: ${{ steps.get_version.outputs.VERSION }}/g" helm/values.yaml
