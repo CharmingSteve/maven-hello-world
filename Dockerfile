@@ -2,6 +2,8 @@
 FROM maven:3.8.2-openjdk-11-slim AS builder
 # Create a group and user
 RUN groupadd -r nonroot && useradd -r -g nonroot nonroot
+# Create a directory for the local repository
+RUN mkdir -p /home/nonroot/.m2 && chown -R nonroot:nonroot /home/nonroot
 # Switch to nonroot user
 USER nonroot
 WORKDIR /app
