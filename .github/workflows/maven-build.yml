@@ -80,3 +80,7 @@ jobs:
       - name: Update Helm chart
         run: |
           sed -i "s/tag: .*/tag: ${{ steps.get_version.outputs.VERSION }}/g" helm/values.yaml
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git commit -am "Update Helm chart with new version"
+          git push
