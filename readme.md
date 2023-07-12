@@ -2,27 +2,21 @@
 
 I have made changes and automations to this repo.
 
-NON ROOT
-
-The build is automatic when you push to the master branch. 
-It runs https://github.com/CharmingSteve/maven-hello-world/blob/master/.github/workflows/maven-build.yml . 
-The pipeline takes the current verion , especially  the patch and adds 1 to the patch. 
-the version started at 1.0.0 and has moved up with each push. 
-The pom.xml uses a var ${revision} that it uses inside the app. The Git Tag is the source of truth for the version number.
-The first stage of the Dockerfile creates an artifact with the version and patch as part of the file number.
-All stages of the Dockerfile do stuff as nonroot user.
-the nonroot user is assigned a UID so that the deployment will be happy
-The App.java file has been updated to add my name as well as the version with new patch number
-The pipeline builds the java artifact and copies it to a second stage in the Dockerfile. The new file does not have the version in it, so that it can run with a standard Docker  CMD in the container's foreground.
-The second stage Docker image is pushed with the new artifact to Docker Hub with a tag with the version and patch, as well as latest.
-The values.yaml for the helm chart is updated to reflect the newest Docker tag
-The Git tag is exchanged for the newest patch number
-
-This app in the Docker container can run as a single Docker Container, Running it gets the Hello World output with my name and the version number. It will always run as nonroot user inside the container.
-
-deploy from helm.
-Helm files have also been added to the repo. The Helm creates pod as a Job. The output of the job goes to the pods log. Run ` helm upgrade --install maven-hello-world .` 
-The helm also runs as nonroot user with UID
+- The build is automatic when you push to the master branch. It runs [maven-build.yml](https://github.com/CharmingSteve/maven-hello-world/blob/master/.github/workflows/maven-build.yml).
+- The pipeline takes the current version, especially the patch, and adds 1 to the patch.
+- The version started at 1.0.0 and has moved up with each push.
+- The `pom.xml` uses a variable `${revision}` that it uses inside the app. The Git Tag is the source of truth for the version number.
+- The first stage of the Dockerfile creates an artifact with the version and patch as part of the file number.
+- All stages of the Dockerfile perform actions as a nonroot user.
+- The nonroot user is assigned a UID so that the deployment will be happy.
+- The `App.java` file has been updated to add my name as well as the version with the new patch number.
+- The pipeline builds the Java artifact and copies it to a second stage in the Dockerfile. The new file does not have the version in it, so that it can run with a standard Docker CMD in the container's foreground.
+- The second stage Docker image is pushed with the new artifact to Docker Hub with a tag with the version and patch, as well as `latest`.
+- The `values.yaml` for the helm chart is updated to reflect the newest Docker tag.
+- The Git tag is exchanged for the newest patch number.
+- This app in the Docker container can run as a single Docker Container. Running it gets the "Hello World" output with my name and the version number. It will always run as nonroot user inside the container.
+- Deployment from Helm: Helm files have also been added to the repo. The Helm creates a pod as a Job. The output of the job goes to the pod's log. Run `helm upgrade --install maven-hello-world .`
+- The helm also runs as a nonroot user with UID.
 
 
 ---
